@@ -6,6 +6,7 @@ require 'dm-core'
 require 'dm-validations'
 require 'dm-migrations'
 require 'json-schema'
+require "dm-postgres-adapter"
 require_relative 'helper/app_helper'
 
 helpers AppHelper
