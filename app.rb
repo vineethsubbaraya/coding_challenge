@@ -69,7 +69,7 @@ post '/' do
       }
     }
   }
-
+  ## JSON validation
   begin
     valid = JSON::Validator.fully_validate(schema, data)
     if !valid.empty?
