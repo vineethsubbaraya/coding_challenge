@@ -8,8 +8,6 @@ require 'dm-migrations'
 require 'json-schema'
 require_relative 'helper/app_helper'
 
-set :bind, '0.0.0.0'
-set :port, 8000
 helpers AppHelper
 
 DataMapper.setup :default, "sqlite://#{Dir.pwd}/database.db"
@@ -25,6 +23,7 @@ get '/' do
   client = WordCount.new(text: source_text.downcase, exclude: exclude.join(","))
   client.save
 
+  status 200
   erb :"get.json", locals: { source_text: source_text, exclude: exclude, client_id: client.client_id }
 end
 
@@ -67,13 +66,13 @@ post '/' do
   }
 
   begin
-    JSON::Validator.validate(schema, data)
+    valid = JSON::Validator.fully_validate(schema, data)
+    if !valid.empty?
+      halt 400, {'Content-Type' => 'application/json'}, { message: 'Invalid Json format' }.to_json
+    end
   rescue
     halt 400, {'Content-Type' => 'application/json'}, { message: 'Invalid Json format' }.to_json
   end
-  #if !errors.empty?
-  #  halt 400, {'Content-Type' => 'application/json'}, { message: 'Invalid Json format' }.to_json
-  #end
   payload = JSON.parse(data)
   original_freq = get_frequencies(payload["text"], payload["exclude"])
   client = WordCount.last(:client_id => payload["client_id"])

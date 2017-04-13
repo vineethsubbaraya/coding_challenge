@@ -1,6 +1,8 @@
 {
   "message": "<%= message %>"
   "status": "<%= status %>"
-  "previous_text": "<%= client.text %>"
-  "previous_exclude": "<%= client.exclude %>"
+  <% if !client.nil? %>
+    "previous_text": "<%= client.text %>"
+    "previous_exclude": "<%= client.exclude %>"
+  <%end%>
 }
