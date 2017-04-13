@@ -10,7 +10,8 @@ require_relative 'helper/app_helper'
 
 helpers AppHelper
 
-DataMapper.setup :default, "sqlite://#{Dir.pwd}/database.db"
+DataMapper.setup :default, "sqlite://#{Dir.pwd}/database.db" if development?
+DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mydb') if production?
 require_relative 'model/word_count'
 DataMapper.auto_upgrade!
 
