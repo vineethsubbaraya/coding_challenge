@@ -1,4 +1,6 @@
 class WordCount
+
+  ## Model for saving Wordcount
   include DataMapper::Resource
   
   property :id, Serial

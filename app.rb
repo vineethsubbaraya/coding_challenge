@@ -6,16 +6,17 @@ require 'dm-core'
 require 'dm-validations'
 require 'dm-migrations'
 require 'json-schema'
-require "dm-postgres-adapter"
 require_relative 'helper/app_helper'
 
 helpers AppHelper
 
+## Database setup
 DataMapper.setup :default, "sqlite://#{Dir.pwd}/database.db" if development?
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/database.db") if production?
 require_relative 'model/word_count'
 DataMapper.auto_upgrade!
 
+#GET resquest (text retrieved from example files)
 get '/' do
   files = %w(texts/0 texts/1 texts/2 texts/3 texts/4 texts/5)
 
@@ -29,6 +30,7 @@ get '/' do
   erb :"get.json", locals: { source_text: source_text, exclude: exclude, client_id: client.client_id }
 end
 
+# GET request(text generated in random using faker gem)
 get '/random' do
   text =  Faker::Lorem.sentence
   exclude = get_exclude_words(text)
@@ -38,6 +40,7 @@ get '/random' do
   erb :"get.json", locals: { source_text: text, exclude: exclude, client_id: client.client_id }
 end
 
+# POST request(for validation frequency count, bad request and cheating protextion)
 post '/' do
 
   data = request.body.read

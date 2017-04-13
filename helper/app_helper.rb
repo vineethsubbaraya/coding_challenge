@@ -1,5 +1,6 @@
 module AppHelper
-
+  
+  ## Get the exclude words array
   def get_exclude_words(text)
     text_arr = text.downcase.split
     text_arr = text_arr.uniq
@@ -15,6 +16,7 @@ module AppHelper
 
   end
 
+    ## Get the frequencies of the words
   def get_frequencies(text, exclude_arr)
     text_arr = text.downcase.split
     exclude_arr.map!(&:downcase)
@@ -28,11 +30,13 @@ module AppHelper
     return freq
   end
 
+  ## Compare frequency counts
   def check_frequencies(original, requested)
     requested = Hash[requested.map{ |key,val| [key.downcase, val]}]
     return original == requested
   end
-
+  
+  ## Check for cheating protection
   def check_prev_msg(text, exclude, client)
     if client.nil?
       return false
